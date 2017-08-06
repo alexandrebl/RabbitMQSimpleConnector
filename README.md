@@ -1,0 +1,2 @@
+# RabbitMQSimpleConnector
+RabbitMQ simple connector
