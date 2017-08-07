@@ -2,7 +2,7 @@
 RabbitMQ simple connector
 
 
-´´´cs
+```cs
 using System;
 using RabbitMQSimpleConnector.Entity;
 
@@ -41,4 +41,4 @@ namespace RabbitMQSimpleConnector.ExampleOfUse {
         public string Matricula { get; set; }
     }
 }
-´´´
+```
