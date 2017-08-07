@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>RabbitMQSimpleConnector</id>
+    <version>1.0.0</version>
+    <title>RabbitMQSimpleConnector</title>
+    <authors>Alexandre Brandao Lustosa</authors>
+    <owners>Alexandre Brandao Lustosa</owners>
+    <licenseUrl>https://github.com/alexandrebl/RabbitMQSimpleConnector</licenseUrl>
+    <projectUrl>https://github.com/alexandrebl/RabbitMQSimpleConnector</projectUrl>
+    <iconUrl>https://github.com/alexandrebl/RabbitMQSimpleConnector</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>RabbitMQ Client</description>
+    <releaseNotes>RabbitMQ Client</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>RabbitMQ Client ServiceBroker MessageBroker Queue Exchange</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="10.0" />
+      <dependency id="RabbitMQ.Client" version="5.0" />
+      <dependency id="Microsoft.Diagnostics.Tracing.EventSource.Redist" version="1.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\*" target="lib\net46"></file>
+  </files>
+</package>
