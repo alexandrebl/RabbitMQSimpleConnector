@@ -1,6 +1,8 @@
 # RabbitMQSimpleConnector
 RabbitMQ simple connector
 
+How to use:
+Install-Package RabbitMQSimpleConnector
 
 ```cs
 using System;
