@@ -1,6 +1,8 @@
 # RabbitMQSimpleConnector
 RabbitMQ simple connector
 
+How to use:
+Install-Package RabbitMQSimpleConnector
 
 ```cs
 using System;
@@ -10,10 +12,10 @@ namespace RabbitMQSimpleConnector.ExampleOfUse {
     class Program {
         static void Main() {
             var connectionconfig = new ConnectionConfig() {
-                HostName = "10.152.20.103",
-                Password = "mudar123...#",
-                UserName = "dnauth",
-                VirtualHost = "dnauth"
+                HostName = "<IP Address>",
+                Password = "<Password>",
+                UserName = "<User Name>",
+                VirtualHost = "<Virtual Host>"
             };
 
             var queueManager = new QueueManager<Aluno>(connectionconfig, "queueTest", 100);
