@@ -21,6 +21,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\*" target="lib\net46"></file>
+    <file src="bin\Release\*" target="lib"></file>
   </files>
 </package>
