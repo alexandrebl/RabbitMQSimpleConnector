@@ -1,5 +1,5 @@
 # RabbitMQSimpleConnector
-RabbitMQ simple connector
+RabbitMQ Simple Connector
 
 How to use:
 Install-Package RabbitMQSimpleConnector
