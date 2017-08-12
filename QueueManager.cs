@@ -1,63 +1,113 @@
 ﻿using System;
-using System.Text;
-using Newtonsoft.Json;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using RabbitMQSimpleConnector.Entity;
 using RabbitMQSimpleConnector.Library;
 
 namespace RabbitMQSimpleConnector {
-    public class QueueManager<T> {
+    /// <summary>
+    /// Responsável por gerenciar publicação e o consumo no RabbitMQ
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class QueueManager<T> : IDisposable {
 
-        private readonly IModel _channel;
-        private readonly bool _autoAck;
+        /// <summary>
+        /// Canal de comunicação com a fila
+        /// </summary>
+        private IModel _channel;
+
+        /// <summary>
+        /// Produtor de mensagens
+        /// </summary>
+        public Producer<T> Producer { get; set; }
+
+        /// <summary>
+        /// Consumidor de mensagens
+        /// </summary>
+        public Consumer<T> Consumer { get; set; }
+
+        /// <summary>
+        /// Descrição da fila
+        /// </summary>
         private readonly string _queueName;
-        private readonly ushort _prefetchCount;
 
-        public event Action<T, ulong> ReceiveMessage;
-
-        public QueueManager(ConnectionConfig connectionConfig, string queueName, ushort prefetchCount = 1, bool autoAck = false) {
+        /// <summary>
+        /// Método construtor parametrizado
+        /// </summary>
+        /// <param name="queueName">Descrição da fila</param>
+        public QueueManager(string queueName) {
             _queueName = queueName;
-            _autoAck = autoAck;
-            _prefetchCount = prefetchCount;
-            _channel = ChannelFactory.Create(connectionConfig);
         }
 
-        public void WatchInit() {
-            _channel.QueueDeclare(_queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
-
-            var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += (model, ea) => {
-                var body = ea.Body; 
-                 var message = Encoding.UTF8.GetString(body);
-
-                var data = JsonConvert.DeserializeObject<T>(message);
-                    
-                ReceiveMessage?.Invoke(data, ea.DeliveryTag);
-                
-            };
-
-            _channel.BasicQos(0, _prefetchCount, false);
-
-            _channel.BasicConsume(queue: _queueName, autoAck: _autoAck, consumer: consumer);
+        /// <summary>
+        /// Atribui uma configuração para conexão com RabbitMQ
+        /// </summary>
+        /// <param name="connectionSetting">Configurações de conexão</param>
+        /// <returns>Instância de gerenciamento de fila com uma conexão com RabbitMQ</returns>
+        public QueueManager<T> WithConnectionSetting(ConnectionSetting connectionSetting) {
+            CreateChannel(connectionSetting);
+            return this;
         }
 
-        public void Publish(T obj)
-        {
-            var data = JsonConvert.SerializeObject(obj);
-
-            var buffer = Encoding.UTF8.GetBytes(data);
-
-            _channel.BasicPublish(exchange: "", routingKey: _queueName, basicProperties: null, body: buffer);
+        /// <summary>
+        /// Cria uma canal de comunicação com RabbitMQ
+        /// </summary>
+        /// <param name="connectionSetting"></param>
+        private void CreateChannel(ConnectionSetting connectionSetting) {
+            _channel = ChannelFactory.Create(connectionSetting);
         }
 
-        public void Ack(ulong deliveryTag)
-        {
-            _channel.BasicAck(deliveryTag, false);
+        /// <summary>
+        /// Atribui um consumidor ao gerenciador 
+        /// </summary>
+        /// <param name="prefetchCount">Controla o número de mensagem recebidas</param>
+        /// <param name="autoAck">Indica se a mensagem será removida ou não da fila</param>
+        /// <returns>Instância de gerenciamento de fila com um consumidor</returns>
+        public QueueManager<T> WithConsumer(ushort prefetchCount = 1, bool autoAck = false) {
+
+            this.Consumer = new Consumer<T>(_channel, _queueName, prefetchCount, autoAck);
+            return this;
         }
 
-        public void NAck(ulong deliveryTag, bool requeued = true) {
-            _channel.BasicNack(deliveryTag, false, requeued);
+        /// <summary>
+        /// Atribui um produtor ao gerenciador
+        /// </summary>
+        /// <returns>Instância de gerenciamento de fila com um produtor</returns>
+        public QueueManager<T> WithProducer() {
+
+            this.Producer = new Producer<T>(_channel, _queueName);
+            return this;
         }
+
+        /// <summary>
+        /// 'IDisposable' implementation.
+        /// </summary>
+        public void Dispose() {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 'IDisposable' implementation.
+        /// </summary>
+        /// <param name="disposeManaged">Whether to dispose managed resources.</param>
+        protected virtual void Dispose(bool disposeManaged) {
+            // Return if already disposed.
+            if (this._alreadyDisposed) return;
+
+            // Release managed resources if needed.
+            if (disposeManaged) {
+                this.Consumer?.Dispose();
+                this.Producer?.Dispose();
+                this._channel?.Dispose();
+                ChannelFactory.CloseConnection();
+            }
+
+            this._alreadyDisposed = true;
+        }
+
+        /// <summary>
+        /// Whether the object was already disposed.
+        /// </summary>
+        private bool _alreadyDisposed = false;
     }
 }
