@@ -28,6 +28,11 @@ namespace RabbitMQSimpleConnector.Library {
         public event Action<T, ulong> ReceiveMessage;
 
         /// <summary>
+        /// Evento lança uma exception no recebimento da mensagem da fila
+        /// </summary>
+        public event Action<Exception> OnReceiveMessageException;
+
+        /// <summary>
         /// Método construtor parametrizado
         /// </summary>
         /// <param name="channel">Indica se a mensagem será removida ou não da fila</param>
@@ -51,16 +56,24 @@ namespace RabbitMQSimpleConnector.Library {
         /// Cria o objeto consumidor
         /// </summary>
         private void InitializeObject() {
+
             Channel.QueueDeclare(QueueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
 
             var consumer = new EventingBasicConsumer(Channel);
+
             consumer.Received += (model, ea) => {
-                var body = ea.Body;
-                var message = Encoding.UTF8.GetString(body);
+                try {
 
-                var data = JsonConvert.DeserializeObject<T>(message);
+                    var body = ea.Body;
+                    var message = Encoding.UTF8.GetString(body);
+                    var data = JsonConvert.DeserializeObject<T>(message);
+                    ReceiveMessage?.Invoke(data, ea.DeliveryTag);
 
-                ReceiveMessage?.Invoke(data, ea.DeliveryTag);
+                } catch (Exception ex) {
+                    //ex.QueueMessage = Encoding.UTF8.GetString(ea.Body);
+                    //ex.QueueType = typeof(T);
+                    OnReceiveMessageException?.Invoke(ex);
+                }
             };
 
             Channel.BasicQos(0, _prefetchCount, false);
