@@ -31,6 +31,10 @@ namespace RabbitMQSimpleConnector.ExampleOfUse {
 			
 			queueManager.Consumer.WatchInit();
 
+            queueManager.Consumer.OnReceiveMessageException += exception => {
+                    Console.WriteLine(exception.Message);
+            };
+
             queueManager.Consumer.ReceiveMessage += (aluno, deliveryTag) => {
                 Console.WriteLine($"Nome: {aluno.Nome} | Matricula: {aluno.Matricula} | DeliveryTag: {deliveryTag}");
 
