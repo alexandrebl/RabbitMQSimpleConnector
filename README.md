@@ -29,11 +29,11 @@ namespace RabbitMQSimpleConnector.ExampleOfUse {
                 .WithProducer() 
                 .WithConsumer();
 			
-			queueManager.Consumer.WatchInit();
+	    queueManager.Consumer.WatchInit();
 
-			queueManager.Consumer.OnReceiveMessageException += (exception, deliveryTag) => {
-                Console.WriteLine(exception.Message);
-				queueManager.Consumer.Ack(deliveryTag);
+	    queueManager.Consumer.OnReceiveMessageException += (exception, deliveryTag) => {
+            	Console.WriteLine(exception.Message);
+		queueManager.Consumer.Ack(deliveryTag);
             };
 
             queueManager.Consumer.ReceiveMessage += (aluno, deliveryTag) => {
