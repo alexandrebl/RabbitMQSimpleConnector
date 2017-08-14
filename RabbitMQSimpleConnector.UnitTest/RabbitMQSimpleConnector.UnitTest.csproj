@@ -57,7 +57,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RabbitMQSimpleConnector.csproj">
+    <ProjectReference Include="..\RabbitMQSimpleConnector\RabbitMQSimpleConnector.csproj">
       <Project>{43c5fe8a-060a-4f9f-8575-c71d419878cf}</Project>
       <Name>RabbitMQSimpleConnector</Name>
     </ProjectReference>
