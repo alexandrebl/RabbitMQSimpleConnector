@@ -30,7 +30,7 @@ namespace RabbitMQSimpleConnector.Library {
         /// <summary>
         /// Evento lança uma exception no recebimento da mensagem da fila
         /// </summary>
-        public event Action<Exception> OnReceiveMessageException;
+        public event Action<Exception, ulong> OnReceiveMessageException;
 
         /// <summary>
         /// Método construtor parametrizado
@@ -72,7 +72,7 @@ namespace RabbitMQSimpleConnector.Library {
                 } catch (Exception ex) {
                     //ex.QueueMessage = Encoding.UTF8.GetString(ea.Body);
                     //ex.QueueType = typeof(T);
-                    OnReceiveMessageException?.Invoke(ex);
+                    OnReceiveMessageException?.Invoke(ex, ea.DeliveryTag);
                 }
             };
 
