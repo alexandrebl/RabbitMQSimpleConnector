@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQSimpleConnector.Library.Base;
@@ -9,6 +10,11 @@ namespace RabbitMQSimpleConnector.Library {
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class Producer<T> : BaseQueue {
+
+        /// <summary>
+        /// Evento lança uma exception no recebimento da mensagem da fila
+        /// </summary>
+        public event Action<Exception> OnPublishMessageException;
 
         /// <summary>
         /// Método construtor parametrizado
@@ -23,9 +29,14 @@ namespace RabbitMQSimpleConnector.Library {
         /// </summary>
         /// <param name="obj"></param>
         public void Publish(T obj) {
-            var data = JsonConvert.SerializeObject(obj);
-            var buffer = Encoding.UTF8.GetBytes(data);
-            this.Channel.BasicPublish(exchange: "", routingKey: this.QueueName, basicProperties: null, body: buffer);
+            try {
+                var data = JsonConvert.SerializeObject(obj);
+                var buffer = Encoding.UTF8.GetBytes(data);
+                this.Channel.BasicPublish(exchange: "", routingKey: this.QueueName, basicProperties: null, body: buffer);
+            } catch (Exception ex) {
+
+                OnPublishMessageException?.Invoke(ex);
+            }
         }
     }
 }

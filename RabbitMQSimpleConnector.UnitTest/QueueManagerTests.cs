@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RabbitMQSimpleConnector.Entity;
 
 namespace RabbitMQSimpleConnector.UnitTest {
@@ -17,7 +18,6 @@ namespace RabbitMQSimpleConnector.UnitTest {
             };
 
             _queueManager = new QueueManager<Aluno>("queueTest")
-#warning colocar conexão padrão
                 .WithConnectionSetting(connectionSetting)
                 .WithProducer() //testar sem producer
                 .WithConsumer(); //testar sem consumer
@@ -51,10 +51,13 @@ namespace RabbitMQSimpleConnector.UnitTest {
         [TestMethod]
         public void ReceiveMessage() {
 
-            if (_queueManager.Consumer != null)
-            {
-                _queueManager.Consumer.ReceiveMessage += (aluno, deliveryTag) =>
-                {
+            if (_queueManager.Consumer != null) {
+
+                _queueManager.Consumer.OnReceiveMessageException += exception => {
+                    Console.WriteLine(exception.Message);
+                };
+
+                _queueManager.Consumer.ReceiveMessage += (aluno, deliveryTag) => {
 
                     Assert.AreEqual(aluno.Matricula, _actual.Matricula);
                     Assert.AreEqual(aluno.Nome, _actual.Nome);
@@ -64,9 +67,7 @@ namespace RabbitMQSimpleConnector.UnitTest {
                 };
 
                 _queueManager.Consumer.WatchInit();
-            }
-            else
-            {
+            } else {
                 Assert.IsTrue(true);
             }
         }
