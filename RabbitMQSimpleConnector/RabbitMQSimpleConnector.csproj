@@ -49,7 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity\ConnectionConfig.cs" />
+    <Compile Include="Entity\ConnectionSetting.cs" />
+    <Compile Include="Library\Base\BaseQueue.cs" />
+    <Compile Include="Library\Consumer.cs" />
+    <Compile Include="Library\Producer.cs" />
+    <Compile Include="Library\ReceiveMessageException.cs" />
+    <Compile Include="Library\Rpc.cs" />
     <Compile Include="Library\ChannelFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueManager.cs" />
