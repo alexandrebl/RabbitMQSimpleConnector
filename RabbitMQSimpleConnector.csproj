@@ -50,8 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entity\ConnectionSetting.cs" />
-    <Compile Include="Entity\Consumer.cs" />
-    <Compile Include="Entity\Producer.cs" />
+    <Compile Include="Library\Base\BaseQueue.cs" />
+    <Compile Include="Library\Consumer.cs" />
+    <Compile Include="Library\Producer.cs" />
+    <Compile Include="Library\Rpc.cs" />
     <Compile Include="Library\ChannelFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueManager.cs" />
