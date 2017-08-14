@@ -53,8 +53,9 @@ namespace RabbitMQSimpleConnector.UnitTest {
 
             if (_queueManager.Consumer != null) {
 
-                _queueManager.Consumer.OnReceiveMessageException += exception => {
+                _queueManager.Consumer.OnReceiveMessageException += (exception, deliveryTag) => {
                     Console.WriteLine(exception.Message);
+                    _queueManager.Consumer.Ack(deliveryTag);
                 };
 
                 _queueManager.Consumer.ReceiveMessage += (aluno, deliveryTag) => {
