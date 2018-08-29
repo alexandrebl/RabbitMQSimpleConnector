@@ -28,11 +28,11 @@ namespace RabbitMQSimpleConnector.Library {
         /// Publica a mensagem na fila
         /// </summary>
         /// <param name="obj"></param>
-        public void Publish(T obj) {
+        public void Publish(T obj, string exchange = null, string routingKey = null) {
             try {
                 var data = JsonConvert.SerializeObject(obj);
                 var buffer = Encoding.UTF8.GetBytes(data);
-                this.Channel.BasicPublish(exchange: "", routingKey: this.QueueName, basicProperties: null, body: buffer);
+                this.Channel.BasicPublish(exchange: exchange ?? "", routingKey: routingKey ?? this.QueueName, basicProperties: null, body: buffer);
             } catch (Exception ex) {
 
                 OnPublishMessageException?.Invoke(ex);
