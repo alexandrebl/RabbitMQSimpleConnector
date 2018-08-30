@@ -5,6 +5,11 @@ using System.Collections.Generic;
 namespace RabbitMQSimpleConnector.Library {
     public static class Prepare {
 
+        public static void ExchangeDeclare(IModel channel, string exchange, string type = "topic", bool durable = true)
+        {
+            channel.ExchangeDeclare(exchange, type, true);
+        }
+
         public static void QueueDeclareAndBind(IModel channel, PrepareConfiguration prepareConfiguration) {
             var queueArguments = new Dictionary<string, object>();
 
