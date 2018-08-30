@@ -10,7 +10,7 @@ namespace RabbitMQSimpleConnector.Library {
             channel.ExchangeDeclare(exchange, type, true);
         }
 
-        public static void QueueDeclareAndBind(IModel channel, PrepareConfiguration prepareConfiguration, bool autoDelete = false) {
+        public static void QueueDeclareAndBind(IModel channel, PrepareConfiguration prepareConfiguration, bool autoDelete = false, bool exclusive = false) {
             var queueArguments = new Dictionary<string, object>();
 
             if (!string.IsNullOrWhiteSpace(prepareConfiguration.DeadLetterRouteName)) {
@@ -31,8 +31,8 @@ namespace RabbitMQSimpleConnector.Library {
         }
 
         public static void QueueDeclare(IModel channel, PrepareConfiguration prepareConfiguration,
-            IDictionary<string, object> queueArguments, bool autoDelete = false) {
-            channel.QueueDeclare(prepareConfiguration.QueueName, arguments: queueArguments, autoDelete: autoDelete);
+            IDictionary<string, object> queueArguments, bool autoDelete = false, bool exclusive = false) {
+            channel.QueueDeclare(prepareConfiguration.QueueName, arguments: queueArguments, autoDelete: autoDelete, exclusive: exclusive);
         }
 
         public static void QueueBind(IModel channel, PrepareConfiguration prepareConfiguration) {
