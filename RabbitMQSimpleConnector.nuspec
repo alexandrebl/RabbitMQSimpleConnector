@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>RabbitMQSimpleConnector</id>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <title>RabbitMQSimpleConnector</title>
     <authors>Alexandre Brandao Lustosa</authors>
     <owners>Alexandre Brandao Lustosa</owners>
