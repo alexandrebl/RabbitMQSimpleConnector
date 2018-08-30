@@ -10,7 +10,7 @@ namespace RabbitMQSimpleConnector.Library {
             channel.ExchangeDeclare(exchange, type, true);
         }
 
-        public static void QueueDeclareAndBind(IModel channel, PrepareConfiguration prepareConfiguration) {
+        public static void QueueDeclareAndBind(IModel channel, PrepareConfiguration prepareConfiguration, bool autoDelete = false) {
             var queueArguments = new Dictionary<string, object>();
 
             if (!string.IsNullOrWhiteSpace(prepareConfiguration.DeadLetterRouteName)) {
@@ -26,13 +26,13 @@ namespace RabbitMQSimpleConnector.Library {
                 queueArguments.Add("x-max-priority", prepareConfiguration.MaxPriority.Value);
             }
 
-            QueueDeclare(channel, prepareConfiguration, queueArguments);
+            QueueDeclare(channel, prepareConfiguration, queueArguments, autoDelete);
             QueueBind(channel, prepareConfiguration);
         }
 
         public static void QueueDeclare(IModel channel, PrepareConfiguration prepareConfiguration,
-            IDictionary<string, object> queueArguments) {
-            channel.QueueDeclare(prepareConfiguration.QueueName, arguments: queueArguments);
+            IDictionary<string, object> queueArguments, bool autoDelete = false) {
+            channel.QueueDeclare(prepareConfiguration.QueueName, arguments: queueArguments, autoDelete: autoDelete);
         }
 
         public static void QueueBind(IModel channel, PrepareConfiguration prepareConfiguration) {
