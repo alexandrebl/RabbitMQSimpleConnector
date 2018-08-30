@@ -49,9 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\PrepareConfiguration.cs" />
     <Compile Include="Entity\ConnectionSetting.cs" />
     <Compile Include="Library\Base\BaseQueue.cs" />
     <Compile Include="Library\Consumer.cs" />
+    <Compile Include="Library\Prepare.cs" />
     <Compile Include="Library\Producer.cs" />
     <Compile Include="Library\ReceiveMessageException.cs" />
     <Compile Include="Library\Rpc.cs" />
