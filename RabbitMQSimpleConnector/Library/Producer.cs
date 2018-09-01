@@ -42,11 +42,14 @@ namespace RabbitMQSimpleConnector.Library {
         /// Publica a mensagem na fila
         /// </summary>
         /// <param name="obj"></param>
-        public void Publish<L>(L obj, IModel channel, string exchange = null, string routingKey = null) {
-            try {
+        public void GenericPublish<L>(L obj, IModel channel = null, string exchange = null, string routingKey = null) {
+            try
+            {
+                var localChannel = channel ?? this.Channel;
                 var data = JsonConvert.SerializeObject(obj);
                 var buffer = Encoding.UTF8.GetBytes(data);
-                channel.BasicPublish(exchange: exchange ?? "", routingKey: routingKey ?? this.QueueName, basicProperties: null, body: buffer);
+
+                localChannel.BasicPublish(exchange: exchange ?? "", routingKey: routingKey ?? this.QueueName, basicProperties: null, body: buffer);
             } catch (Exception ex) {
                 OnPublishMessageException?.Invoke(ex);
             }
