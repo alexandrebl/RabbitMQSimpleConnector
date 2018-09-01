@@ -40,22 +40,5 @@ namespace RabbitMQSimpleConnector.Library {
                 OnPublishMessageException?.Invoke(ex);
             }
         }
-
-        /// <summary>
-        /// Publica a mensagem na fila
-        /// </summary>
-        /// <param name="obj"></param>
-        public void GenericPublish<L>(L obj, IModel channel = null, string exchange = null, string routingKey = null) {
-            try
-            {
-                var localChannel = channel ?? this.Channel;
-                var data = JsonConvert.SerializeObject(obj);
-                var buffer = Encoding.UTF8.GetBytes(data);
-
-                localChannel.BasicPublish(exchange: exchange ?? "", routingKey: routingKey ?? this.QueueName, basicProperties: null, body: buffer);
-            } catch (Exception ex) {
-                OnPublishMessageException?.Invoke(ex);
-            }
-        }
     }
 }
