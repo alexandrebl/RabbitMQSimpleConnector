@@ -34,7 +34,6 @@ namespace RabbitMQSimpleConnector.Library {
                 var buffer = Encoding.UTF8.GetBytes(data);
                 this.Channel.BasicPublish(exchange: exchange ?? "", routingKey: routingKey ?? this.QueueName, basicProperties: null, body: buffer);
             } catch (Exception ex) {
-
                 OnPublishMessageException?.Invoke(ex);
             }
         }
