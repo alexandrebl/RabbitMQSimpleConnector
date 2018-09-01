@@ -34,7 +34,7 @@ namespace RabbitMQSimpleConnector {
         /// Método construtor parametrizado
         /// </summary>
         /// <param name="queueName">Descrição da fila</param>
-        public QueueManager(string queueName) {
+        public QueueManager(string queueName = null) {
             _queueName = queueName;
         }
 
@@ -63,7 +63,8 @@ namespace RabbitMQSimpleConnector {
         /// <param name="autoAck">Indica se a mensagem será removida ou não da fila</param>
         /// <returns>Instância de gerenciamento de fila com um consumidor</returns>
         public QueueManager<T> WithConsumer(ushort prefetchCount = 1, bool autoAck = false) {
-
+            if(_queueName == null) throw new Exception($"Queue name is undefined");
+            
             this.Consumer = new Consumer<T>(_channel, _queueName, prefetchCount, autoAck);
             return this;
         }

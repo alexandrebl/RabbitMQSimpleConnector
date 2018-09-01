@@ -30,8 +30,11 @@ namespace RabbitMQSimpleConnector.Library {
         /// <param name="obj"></param>
         public void Publish(T obj, string exchange = null, string routingKey = null) {
             try {
+                if (this.QueueName == null && routingKey == null) throw new Exception($"Queue name is undefined");
+
                 var data = JsonConvert.SerializeObject(obj);
                 var buffer = Encoding.UTF8.GetBytes(data);
+
                 this.Channel.BasicPublish(exchange: exchange ?? "", routingKey: routingKey ?? this.QueueName, basicProperties: null, body: buffer);
             } catch (Exception ex) {
                 OnPublishMessageException?.Invoke(ex);
