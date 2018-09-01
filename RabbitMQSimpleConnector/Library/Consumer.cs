@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -48,16 +49,17 @@ namespace RabbitMQSimpleConnector.Library {
         /// <summary>
         /// Inicia o consumidor e fica aguardando mensagens
         /// </summary>
-        public void WatchInit() {
-            this.InitializeObject();
+        public void WatchInit(bool durable = true, bool exclusive = false, bool autoDelete = false, IDictionary<string, object> arguments = null) {
+            this.InitializeObject(durable, exclusive, autoDelete, arguments);
         }
 
         /// <summary>
         /// Cria o objeto consumidor
         /// </summary>
-        private void InitializeObject() {
+        private void InitializeObject(bool durable = true, bool exclusive = false, bool autoDelete = false, IDictionary<string, object> arguments = null, bool queueDeclare = false) {
 
-            Channel.QueueDeclare(QueueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            if (queueDeclare)
+                Channel.QueueDeclare(QueueName, durable: durable, exclusive: exclusive, autoDelete: autoDelete, arguments: arguments);
 
             var consumer = new EventingBasicConsumer(Channel);
 
