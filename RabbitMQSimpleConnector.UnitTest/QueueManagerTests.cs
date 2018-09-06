@@ -19,8 +19,8 @@ namespace RabbitMQSimpleConnector.UnitTest {
 
             _queueManager = new QueueManager<Aluno>("queueTest")
                 .WithConnectionSetting(connectionSetting)
-                .WithProducer() //testar sem producer
-                .WithConsumer(); //testar sem consumer
+                .WithProducer()
+                .WithConsumer();
 
             _actual = new Aluno {
                 Nome = "Edu",
